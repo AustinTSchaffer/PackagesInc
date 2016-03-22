@@ -11,7 +11,6 @@ import android.view.View;
 
 public class ActivityMainPage extends AppCompatActivity {
 
-    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
