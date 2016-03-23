@@ -17,6 +17,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    dexOptions {
+
+    }
 }
 
 repositories {
@@ -26,14 +30,12 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'com.android.support:design:23.2.0'
     compile(name:'ScanditBarcodeScanner', ext:'aar')
-    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
-    compile 'com.amazonaws:aws-android-sdk-core:2.+'
-    compile 'com.amazonaws:aws-android-sdk-cognito:2.+'
-    compile 'com.amazonaws:aws-android-sdk-ddb:2.+'
-    compile 'com.amazonaws:aws-android-sdk-ddb-mapper:2.+'
+    compile 'com.amazonaws:aws-android-sdk-core:2.2.13'
+    compile 'com.amazonaws:aws-android-sdk-cognito:2.2.13'
+    compile 'com.amazonaws:aws-android-sdk-ddb:2.2.13'
+    compile 'com.amazonaws:aws-android-sdk-ddb-mapper:2.2.13'
 }
