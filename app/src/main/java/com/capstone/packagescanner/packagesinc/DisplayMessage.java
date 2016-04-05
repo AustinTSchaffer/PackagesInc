@@ -17,6 +17,8 @@ import android.widget.TextView;
  */
 public class DisplayMessage extends AppCompatActivity {
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +28,6 @@ public class DisplayMessage extends AppCompatActivity {
         String message = intent.getStringExtra(MainPage.EXTRA_MESSAGE);
         TextView textView = new TextView(this);
         textView.setTextSize(40);
-        textView.setText("Sending Barcode: " + message);
 
         CoordinatorLayout layout = (CoordinatorLayout) findViewById(R.id.content);
         layout.addView(textView);

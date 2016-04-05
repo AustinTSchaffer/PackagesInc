@@ -10,8 +10,20 @@ import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.*;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.*;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
+import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
+import com.amazonaws.services.dynamodbv2.model.PutItemResult;
 
+import org.w3c.dom.Attr;
+
+import java.text.AttributedCharacterIterator;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class AWSTask extends AsyncTask<String, Void, Void> {
 
@@ -30,11 +42,17 @@ public class AWSTask extends AsyncTask<String, Void, Void> {
                 "us-east-1:cfa64042-b279-4ccb-8c6c-d8bbc98209b7",    /* Identity Pool ID */
                 Regions.US_EAST_1           /* Region for your identity pool--US_EAST_1 or EU_WEST_1*/
         );
+
         AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
         DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
 
-        Package item = new Package();
-        item.setUID(Calendar.getInstance().getTime().toString());
+        Package item = new Package()
+            .setPackageID(params[0])
+            .setDate(Calendar.getInstance().getTime())
+            .addAttribute("DSU")
+            .addAttribute("Recieved")
+            .addAttribute("Austin Schaffer");
+
         mapper.save(item);
 
         return null;
@@ -51,47 +69,52 @@ public class AWSTask extends AsyncTask<String, Void, Void> {
         super.onCancelled();
     }
 
-    /**
-     * Used to package data for sending data to AWS server.
-     * Currently a restrictive implementation, allowing only 2 strings to be sent.
-     */
-    @DynamoDBTable(tableName = "Basic_Test")
+    @DynamoDBTable(tableName = "Package_Table")
     public class Package {
 
-        /**
-         * Default no-args constructor.
-         */
-        public Package() {
-            this.barcode = "DEFAULT_BARCODE";
-            this.uid = "DEFAULT_UID";
+        Package() {
+            this.attributes = new HashSet<>();
         }
 
-        /**
-         * Value returned from the barcode scanner.
-         */
-        private String barcode;
+        private String packageID;
+        private Date utc;
+        private Set<String> attributes;
 
-        /**
-         * Unique identifier for the next table entry.
-         */
-        private String uid;
 
-        @DynamoDBRangeKey(attributeName = "Barcode")
-        public String getBarcode() {
-            return barcode;
+        @DynamoDBHashKey(attributeName = "PackageID")
+        public String getPackageID() {
+            return this.packageID;
         }
 
-        public void setBarcode(String barcode) {
-            this.barcode = barcode;
+        @DynamoDBRangeKey(attributeName = "UTC")
+        public Long getUTC() {
+            return utc.getTime();
         }
 
-        @DynamoDBHashKey(attributeName = "UID")
-        public String getUID() {
-            return uid;
+        @DynamoDBAttribute(attributeName = "DateTime")
+        public String getLocalTimeString() {
+            return utc.toString();
         }
 
-        public void setUID(String uid) {
-            this.uid = uid;
+        @DynamoDBAttribute(attributeName = "Attributes")
+        public Set<String> getAttributes() {
+            return this.attributes;
+        }
+
+
+        public Package setPackageID(String packageID) {
+            this.packageID = packageID;
+            return this;
+        }
+
+        public Package setDate(Date utc) {
+            this.utc = utc;
+            return this;
+        }
+
+        public Package addAttribute(String attribute) {
+            this.attributes.add(attribute);
+            return this;
         }
     }
 
