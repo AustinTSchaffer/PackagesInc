@@ -89,6 +89,12 @@ public class AWSTask extends AsyncTask<String, Void, Void> {
 
         @DynamoDBHashKey(attributeName = "UID")
         public String getUID() {
+
+            // A.B.C. its as easy as 1.2.3.
+            String test = "fuck you git.";
+            test = test.toUpperCase();
+            System.out.println(test);
+
             return uid;
         }
 
