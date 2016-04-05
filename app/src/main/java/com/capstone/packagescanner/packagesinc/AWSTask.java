@@ -16,6 +16,7 @@ import java.util.Calendar;
 public class AWSTask extends AsyncTask<String, Void, Void> {
 
     private Context mContext;
+
     public AWSTask (Context context){
         mContext = context;
     }
@@ -33,9 +34,7 @@ public class AWSTask extends AsyncTask<String, Void, Void> {
         DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
 
         Package item = new Package();
-        Calendar c = Calendar.getInstance();
-        item.setUID(c.getTime().toString());
-
+        item.setUID(Calendar.getInstance().getTime().toString());
         mapper.save(item);
 
         return null;
@@ -63,8 +62,8 @@ public class AWSTask extends AsyncTask<String, Void, Void> {
          * Default no-args constructor.
          */
         public Package() {
-            this.barcode = "";
-            this.uid = "";
+            this.barcode = "DEFAULT_BARCODE";
+            this.uid = "DEFAULT_UID";
         }
 
         /**
