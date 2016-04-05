@@ -33,7 +33,6 @@ public class AWSTask extends AsyncTask<String, Void, Void> {
         DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
 
         Package item = new Package();
-        item.setBarcode(params[0]);
         Calendar c = Calendar.getInstance();
         item.setUID(c.getTime().toString());
 
@@ -89,12 +88,6 @@ public class AWSTask extends AsyncTask<String, Void, Void> {
 
         @DynamoDBHashKey(attributeName = "UID")
         public String getUID() {
-
-            // A.B.C. its as easy as 1.2.3.
-            String test = "fuck you git.";
-            test = test.toUpperCase();
-            System.out.println(test);
-
             return uid;
         }
 
