@@ -16,7 +16,6 @@ import java.util.Calendar;
 public class AWSTask extends AsyncTask<String, Void, Void> {
 
     private Context mContext;
-    public Integer TESTING_STUFF = 3;
     public AWSTask (Context context){
         mContext = context;
     }
