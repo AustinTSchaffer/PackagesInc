@@ -34,7 +34,6 @@ public class AWSTask extends AsyncTask<String, Void, Void> {
         DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
 
         Package item = new Package();
-        item.setBarcode(params[0]);
         Calendar c = Calendar.getInstance();
         item.setUID(c.getTime().toString());
 
@@ -84,14 +83,6 @@ public class AWSTask extends AsyncTask<String, Void, Void> {
             return barcode;
         }
 
-        public void setBarcode(String barcode) {
-            this.barcode = barcode;
-        }
-
-        @DynamoDBHashKey(attributeName = "UID")
-        public String getUID() {
-            return uid;
-        }
 
         public void setUID(String uid) {
             this.uid = uid;
