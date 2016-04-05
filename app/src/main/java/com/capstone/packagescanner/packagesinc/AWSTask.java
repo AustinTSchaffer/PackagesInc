@@ -53,9 +53,29 @@ public class AWSTask extends AsyncTask<String, Void, Void> {
         super.onCancelled();
     }
 
+    /**
+     * Used to package data for sending data to AWS server.
+     * Currently a restrictive implementation, allowing only 2 strings to be sent.
+     */
     @DynamoDBTable(tableName = "Basic_Test")
     public class Package {
+
+        /**
+         * Default no-args constructor.
+         */
+        public Package() {
+            this.barcode = "";
+            this.uid = "";
+        }
+
+        /**
+         * Value returned from the barcode scanner.
+         */
         private String barcode;
+
+        /**
+         * Unique identifier for the next table entry.
+         */
         private String uid;
 
         @DynamoDBRangeKey(attributeName = "Barcode")
@@ -76,5 +96,7 @@ public class AWSTask extends AsyncTask<String, Void, Void> {
             this.uid = uid;
         }
     }
+
+
 
 };
