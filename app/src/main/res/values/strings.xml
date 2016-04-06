@@ -1,9 +1,10 @@
 <resources>
-    <string name="app_name">CPSC Capstone Project</string>
+    <string name="app_name">Packages Inc.</string>
     <string name="action_settings">Settings</string>
     <string name="scandit_default_app_key">osXG5EFmg/u1VaDRVcDq4HMV33qU2p8pg/fotfVkgq4</string>
-    <string name="edit_message">Enter a message</string>
-    <string name="button_send">Send</string>
+    <string name="tex_box_placeholder_package_id">Package ID</string>
+    <string name="button_send_text">Send</string>
     <string name="title_activity_display_message">My Message</string>
     <string name="title_activity_scan_barcode">Scan Barcode</string>
+
 </resources>

@@ -17,12 +17,12 @@
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="@string/edit_message" />
+        android:hint="@string/tex_box_placeholder_package_id" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/button_send"
+        android:text="@string/button_send_text"
         android:onClick="sendMessage"/>
 
 </LinearLayout>

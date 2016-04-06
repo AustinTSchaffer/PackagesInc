@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import java.util.Calendar;
+
 public class MainPage extends AppCompatActivity {
     // TODO: Intents that enter and leave a class must use codes that exist in the destination class.
     public final static String EXTRA_MESSAGE = "com.capstone.packagescanner.MESSAGE";
@@ -76,10 +78,17 @@ public class MainPage extends AppCompatActivity {
     }
 
     public void sendMessage(View view) {
-        Intent intent = new Intent(this, DisplayMessage.class);
-        EditText editText = (EditText) findViewById(R.id.edit_message);
-        String message = editText.getText().toString();
-        intent.putExtra(EXTRA_MESSAGE, message);
+
+        Intent intent = new Intent(this, AWSActivity.class);
+
+        EditText packageIDTextBox = (EditText) findViewById(R.id.edit_message);
+        String packageID = packageIDTextBox.getText().toString();
+
+        intent.putExtra(AWSActivity.INTENT_PARENT_ACTIVITY, MainPage.class);
+        intent.putExtra(AWSActivity.INTENT_PACKAGE_ID, packageID);
+        intent.putExtra(AWSActivity.INTENT_PACKAGE_UTC, Calendar.getInstance().getTime().getTime());
+        intent.putExtra(AWSActivity.INTENT_PACKAGE_ATTRIBUTES, "{\"NERD\" : \"Laura Miller\"}");
+        
         startActivity(intent);
     }
 
