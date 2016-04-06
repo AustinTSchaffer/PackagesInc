@@ -17,7 +17,14 @@ import java.security.InvalidParameterException;
 import java.util.Date;
 
 /**
- * Created by austi on 3/7/2016.
+ *
+ *
+ * @author austi
+ * @author camwhe
+ * @since 6 April 2016
+ *
+ * @see AppCompatActivity
+ * @see Package
  */
 public class AWSActivity extends AppCompatActivity {
 
