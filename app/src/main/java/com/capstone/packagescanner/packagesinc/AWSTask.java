@@ -1,8 +1,5 @@
 package com.capstone.packagescanner.packagesinc;
 
-/**
- * Created by camwhe on 2016-03-23.
- */
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -13,6 +10,17 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.*;
 
 import java.util.Calendar;
 
+/**
+ * AWSTask is an AsyncTask used to transmit data to an AWS DynamoDB.
+ *
+ * @author camwhe
+ * @since 23 March 2016
+ *
+ * @see AmazonDynamoDBClient
+ * @see AsyncTask
+ * @see CognitoCachingCredentialsProvider
+ * @see DynamoDBMapper
+ */
 public class AWSTask extends AsyncTask<String, Void, Void> {
 
     private Context mContext;
@@ -40,11 +48,6 @@ public class AWSTask extends AsyncTask<String, Void, Void> {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see android.os.AsyncTask#onCancelled(java.lang.Object)
-     */
     @Override
     protected void onCancelled() {
         //  Auto-generated method stub
@@ -52,8 +55,10 @@ public class AWSTask extends AsyncTask<String, Void, Void> {
     }
 
     /**
-     * Used to package data for sending data to AWS server.
-     * Currently a restrictive implementation, allowing only 2 strings to be sent.
+     * Used to package data for sending data to a AWS DynamoDB. Class will be processed by
+     * a DynamoDBMapper.
+     *
+     * @see DynamoDBMapper
      */
     @DynamoDBTable(tableName = "Basic_Test")
     public class Package {
@@ -66,14 +71,7 @@ public class AWSTask extends AsyncTask<String, Void, Void> {
             this.uid = "DEFAULT_UID";
         }
 
-        /**
-         * Value returned from the barcode scanner.
-         */
         private String barcode;
-
-        /**
-         * Unique identifier for the next table entry.
-         */
         private String uid;
 
         @DynamoDBRangeKey(attributeName = "Barcode")

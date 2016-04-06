@@ -10,6 +10,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+/**
+ * Main menu activity for the application. Will be the first page seen by the user. Will contain
+ * options for starting different activities or configuring the scanner.
+ *
+ * @author camwhe
+ * @since 4 April 2016
+ *
+ * @see AppCompatActivity
+ */
 public class MenuMain extends AppCompatActivity {
 
     @Override
@@ -44,9 +53,16 @@ public class MenuMain extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Changes the Activity to the MainPage Activity.
+     *
+     * @param view
+     * @see MainPage
+     */
     public void toPackageView(View view) {
         Intent intent = new Intent(this, MainPage.class);
         startActivity(intent);
+        this.finish();
     }
 
 }

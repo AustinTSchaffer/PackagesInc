@@ -10,8 +10,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+/**
+ * This AppCompatActivity will be used to display fields to the user. These fields will be populated
+ * based on user configurations.
+ *
+ * @author austi
+ * @author camwhe
+ * @since 20 February 2016
+ *
+ * @see AppCompatActivity
+ * @see Intent
+ */
 public class MainPage extends AppCompatActivity {
-    // TODO: Intents that enter and leave a class must use codes that exist in the destination class.
     public final static String EXTRA_MESSAGE = "com.capstone.packagescanner.MESSAGE";
     public final static String SCANNED_BARCODE = "com.capstone.packagescanner.BARCODE_SCANNED";
     public final static String SCAN_BARCODE = "com.capstone.packagescanner.SCAN_BARCODE";
@@ -37,6 +47,11 @@ public class MainPage extends AppCompatActivity {
         });
     }
 
+    /**
+     * Populates fields according to the Activity's intent.
+     *
+     * @see Intent
+     */
     private void digentIntent() {
         this.intent = getIntent();
 
@@ -69,17 +84,30 @@ public class MainPage extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Starts the BarcodeScanner activity.
+     *
+     * @param view
+     * @see BarcodeScanner
+     */
     public void openCamera(View view) {
         Intent intent = new Intent(this, BarcodeScanner.class);
         intent.putExtra(this.SCAN_BARCODE, "");
         startActivity(intent);
     }
 
+    /**
+     * Starts a DisplayMessage activity.
+     *
+     * @param view
+     * @see DisplayMessage
+     */
     public void sendMessage(View view) {
         Intent intent = new Intent(this, DisplayMessage.class);
         EditText editText = (EditText) findViewById(R.id.edit_message);
         String message = editText.getText().toString();
         intent.putExtra(EXTRA_MESSAGE, message);
+        // intent.putExtra("CALLING_CLASS", MainPage.class);
         startActivity(intent);
     }
 

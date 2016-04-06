@@ -14,7 +14,13 @@ import com.scandit.barcodepicker.BarcodePicker;
 import java.util.List;
 
 /**
- * Created by austi on 2016-03-23.
+ * The BarcodeScanner activity will be used whenever the user needs to scan a barcode or a QR code.
+ *
+ * @author austi
+ * @since 23 March 2016
+ *
+ * @see com.scandit.barcodepicker.OnScanListener
+ * @see AppCompatActivity
  */
 public class BarcodeScanner extends AppCompatActivity implements OnScanListener {
 
@@ -55,12 +61,26 @@ public class BarcodeScanner extends AppCompatActivity implements OnScanListener 
         }
     }
 
+    /**
+     * Sends the information collected by the barcode scanner to the previous Activity.
+     *
+     * @see Intent
+     */
     private void returnScannedCode() {
         Intent intent = new Intent(this, MainPage.class);
         intent.putExtra(MainPage.SCANNED_BARCODE, this.scannedString);
         startActivity(intent);
+        this.finish();
     }
 
+    /**
+     * Initializes the BarcodePicker object. In the event that the Scandit is upgraded from a
+     * community license, this method should be edited to include any additional barcode types.
+     *
+     * @see Barcode
+     * @see BarcodePicker
+     * @see ScanSettings
+     */
     private void initScanner() {
         ScanditLicense.setAppKey(getString(R.string.scandit_default_app_key));
         if (null == settings) {

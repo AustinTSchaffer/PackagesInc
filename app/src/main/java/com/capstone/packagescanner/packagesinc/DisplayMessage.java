@@ -2,7 +2,6 @@ package com.capstone.packagescanner.packagesinc;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +12,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 /**
- * Created by austi on 3/7/2016.
+ * This class will create and execute an AWSTask for sending information to an AWS DynamoDB. This
+ * class will handle the display and processing of AWS request information.
+ *
+ * @author austi
+ * @since 7 March 2016
+ *
+ * @see AppCompatActivity
+ * @see AWSTask
  */
 public class DisplayMessage extends AppCompatActivity {
 
@@ -37,14 +43,18 @@ public class DisplayMessage extends AppCompatActivity {
         textView.setText("Sent Barcode: " + message);
     }
 
+    /**
+     *
+     * @param view
+     */
     public void returnToMain(View view)
     {
         Intent intent = new Intent(this, MainPage.class);
-        // TODO: Could implement a response from server message here.
         //EditText editText = (EditText) findViewById(R.id.edit_message);
         //String message = editText.getText().toString();
         //intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
+        this.finish();
     }
 
 
