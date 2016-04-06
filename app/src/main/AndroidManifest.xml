@@ -27,7 +27,7 @@
         <activity android:name=".BarcodeScanner"
             android:label="@string/title_activity_scan_barcode">
         </activity>
-        <activity android:name=".DisplayMessage"
+        <activity android:name=".AWSActivity"
             android:label="@string/title_activity_display_message" >
         </activity>
     </application>

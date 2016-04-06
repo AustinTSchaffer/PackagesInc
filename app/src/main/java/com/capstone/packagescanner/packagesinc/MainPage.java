@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import java.util.Calendar;
 
 /**
  * This AppCompatActivity will be used to display fields to the user. These fields will be populated
@@ -97,17 +98,23 @@ public class MainPage extends AppCompatActivity {
     }
 
     /**
-     * Starts a DisplayMessage activity.
+     * Starts an AWSActivity activity.
      *
      * @param view
-     * @see DisplayMessage
+     * @see AWSActivity
      */
     public void sendMessage(View view) {
-        Intent intent = new Intent(this, DisplayMessage.class);
-        EditText editText = (EditText) findViewById(R.id.edit_message);
-        String message = editText.getText().toString();
-        intent.putExtra(EXTRA_MESSAGE, message);
-        // intent.putExtra("CALLING_CLASS", MainPage.class);
+
+        Intent intent = new Intent(this, AWSActivity.class);
+
+        EditText packageIDTextBox = (EditText) findViewById(R.id.edit_message);
+        String packageID = packageIDTextBox.getText().toString();
+
+        intent.putExtra(AWSActivity.INTENT_PARENT_ACTIVITY, MainPage.class);
+        intent.putExtra(AWSActivity.INTENT_PACKAGE_ID, packageID);
+        intent.putExtra(AWSActivity.INTENT_PACKAGE_UTC, Calendar.getInstance().getTime().getTime());
+        intent.putExtra(AWSActivity.INTENT_PACKAGE_ATTRIBUTES, "{\"NERD\" : \"Laura Miller\"}");
+
         startActivity(intent);
     }
 
