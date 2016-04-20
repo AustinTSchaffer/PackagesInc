@@ -9,6 +9,10 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+
 import java.util.Calendar;
 
 /**
@@ -28,10 +32,15 @@ public class MainPage extends AppCompatActivity {
     public final static String SCAN_BARCODE = "com.capstone.packagescanner.SCAN_BARCODE";
     private Intent intent;
 
+    private Region r;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
+
+        Regions.fromName("US_EAST_1");
+
 
         this.digentIntent();
 

@@ -23,7 +23,7 @@ import java.util.List;
  * @see CognitoCachingCredentialsProvider
  * @see DynamoDBMapper
  */
-public class AWSTask extends AsyncTask<String, Void, Void> {
+public class AWSTask extends AsyncTask<String, Void, String> {
 
     private Context mContext;
 
@@ -35,8 +35,10 @@ public class AWSTask extends AsyncTask<String, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(String... params) {
+    protected String doInBackground(String... params) {
         // send DDB mapping set
+
+        String serverResponse = null;
 
         CognitoCachingCredentialsProvider credentialsProvider =
             new CognitoCachingCredentialsProvider(
@@ -48,10 +50,12 @@ public class AWSTask extends AsyncTask<String, Void, Void> {
         AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
         DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
 
-        for (Package p : packages) mapper.save(p);
+        for (Package p : packages) {
+            mapper.save(p);
+        }
         packages.clear();
 
-        return null;
+        return serverResponse;
     }
 
     @Override

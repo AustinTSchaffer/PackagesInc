@@ -2,7 +2,6 @@ package com.capstone.packagescanner.packagesinc;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.io.Serializable;
-import java.security.InvalidParameterException;
 import java.util.Date;
 
 /**
@@ -77,13 +75,13 @@ public class AWSActivity extends AppCompatActivity {
      * intent.
      */
     public static final String INTENT_PACKAGE_ATTRIBUTES
-            = "com.capstone.packagescanner.packagesinc.packageattributes";
+            = "com.capstone.packagescanner.packagesinc.PACKAGEATTRIBUTES";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_display_message);
+        setContentView(R.layout.aws_server_response_page);
 
         CoordinatorLayout layout = (CoordinatorLayout) findViewById(R.id.content);
         TextView textView = new TextView(this);
@@ -168,7 +166,7 @@ public class AWSActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.activity_display_message,
+            View rootView = inflater.inflate(R.layout.aws_server_response_page,
                     container, false);
             return rootView;
         }
