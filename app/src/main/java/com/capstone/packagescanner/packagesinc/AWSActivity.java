@@ -14,7 +14,10 @@ import android.widget.TextView;
 
 import java.io.Serializable;
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -73,12 +76,24 @@ public class AWSActivity extends AppCompatActivity {
     private String attributesJSONString = "{}";
 
     /**
-     * Name value to use when sending a JSON string of attributes to this Activity though its
+     * Name value to use when sending a JSON string of attributes to this Activity through its
      * intent.
      */
     public static final String INTENT_PACKAGE_ATTRIBUTES
             = "com.capstone.packagescanner.packagesinc.packageattributes";
 
+    /**
+     * String List of AWS Credentials.
+     */
+    private List<String> awsCreds= new ArrayList<String>();
+
+    /**
+     * Name value to use when sending a List<String> of credentials to this Activity through its
+     * intent.
+     */
+
+    public final static String INTENT_AWS_CREDENTIALS
+            = "com.capstone.packagescanner.packagesinc.AWS_CREDENTIALS";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +115,14 @@ public class AWSActivity extends AppCompatActivity {
                         .setUTC(this.utc)
                         .setAttributesJSON(this.attributesJSONString)
         );
+
+        /*List<String> creds = new ArrayList<String>();
+        creds.add("us-east-1:cfa64042-b279-4ccb-8c6c-d8bbc98209b7");
+        creds.add("US_EAST_1");
+        task.setCredentials(creds);
+        */
+        task.setCredentials(awsCreds);
+
         task.execute();
 
         textView.setText("Sending Package ID: " + packageID);
@@ -136,6 +159,11 @@ public class AWSActivity extends AppCompatActivity {
         if (intent.hasExtra(AWSActivity.INTENT_PACKAGE_ATTRIBUTES)) {
             String jsonAttributes = intent.getStringExtra(AWSActivity.INTENT_PACKAGE_ATTRIBUTES);
             if (null != jsonAttributes) this.attributesJSONString = jsonAttributes;
+        }
+
+        if (intent.hasExtra(AWSActivity.INTENT_AWS_CREDENTIALS)) {
+            List<String> creds = intent.getStringArrayListExtra(AWSActivity.INTENT_AWS_CREDENTIALS);
+            if (null != creds) this.awsCreds = creds;
         }
     }
 

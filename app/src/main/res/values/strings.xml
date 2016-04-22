@@ -4,7 +4,17 @@
     <string name="scandit_default_app_key">osXG5EFmg/u1VaDRVcDq4HMV33qU2p8pg/fotfVkgq4</string>
     <string name="tex_box_placeholder_package_id">Package ID</string>
     <string name="button_send_text">Send</string>
+    <string name="button_Attribute_text">Input Attributes?</string>
     <string name="title_activity_display_message">My Message</string>
     <string name="title_activity_scan_barcode">Scan Barcode</string>
+    <string name="spinner">Template:</string>
+
+    <string name="pref_title">Database Options</string>
+    <string name="template_list_title">Attribute Template Options</string>
+    <string name="template_summary">Add or remove templates for attributes</string>
+    <string name="id_title">Identity Pool ID</string>
+    <string name="id_summary">Enter your Identity Pool ID</string>
+    <string name="region_title">Region</string>
+    <string name="region_summary">Enter your Region</string>
 
 </resources>

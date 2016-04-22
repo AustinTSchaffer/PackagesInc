@@ -1,15 +1,28 @@
 package com.capstone.packagescanner.packagesinc;
 
+import android.app.ListActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This AppCompatActivity will be used to display fields to the user. These fields will be populated
@@ -26,17 +39,48 @@ public class MainPage extends AppCompatActivity {
     public final static String EXTRA_MESSAGE = "com.capstone.packagescanner.MESSAGE";
     public final static String SCANNED_BARCODE = "com.capstone.packagescanner.BARCODE_SCANNED";
     public final static String SCAN_BARCODE = "com.capstone.packagescanner.SCAN_BARCODE";
+    private static final String ID_POOL = "IDENTITY_POOL";
+    private static final String REGION = "REGION";
+    private static final String TAG = "MainPage";
+
     private Intent intent;
+    SharedPreferences.OnSharedPreferenceChangeListener listener;
+    private ArrayList<String> myCreds;
+
+
+
+    private SharedPreferences myPreference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
 
-        this.digentIntent();
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        myPreference= PreferenceManager.getDefaultSharedPreferences(this);
+
+        this.digentIntent();
+
+        listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+                Log.d(TAG, "Preference key =" + key);
+                if (key.equals(ID_POOL) || key.equals(REGION)) {
+                    // handle credential changes
+                    setCredentials();
+
+                }
+            }
+        };
+        myPreference.registerOnSharedPreferenceChangeListener(listener);
+//
+        setCredentials();
+
+
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -46,6 +90,30 @@ public class MainPage extends AppCompatActivity {
                 openCamera(view);
             }
         });
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_activity_main_page, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent myIntent = new Intent(this, activityPreference.class);
+                startActivity(myIntent);
+            default:
+                break;
+        }
+        return true;
     }
 
     /**
@@ -63,26 +131,14 @@ public class MainPage extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_activity_main_page, menu);
-        return true;
-    }
+    private void setCredentials() {
+        myCreds = new ArrayList<>();
+        myCreds.add(myPreference.getString(ID_POOL, ""));
+        String region = myPreference.getString(REGION, "");
+        myCreds.add(region);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        TextView regionText = (TextView) findViewById(R.id.region_text);
+        regionText.setText(region);
     }
 
     /**
@@ -93,7 +149,7 @@ public class MainPage extends AppCompatActivity {
      */
     public void openCamera(View view) {
         Intent intent = new Intent(this, BarcodeScanner.class);
-        intent.putExtra(this.SCAN_BARCODE, "");
+        intent.putExtra(SCAN_BARCODE, "");
         startActivity(intent);
     }
 
@@ -105,17 +161,26 @@ public class MainPage extends AppCompatActivity {
      */
     public void sendMessage(View view) {
 
-        Intent intent = new Intent(this, AWSActivity.class);
+        ConnectivityCheck myCheck = new ConnectivityCheck(this);
+        if (myCheck.isNetworkReachableAlertUserIfNot()) {
+            Intent AWSIntent = new Intent(this, AWSActivity.class);
 
-        EditText packageIDTextBox = (EditText) findViewById(R.id.edit_message);
-        String packageID = packageIDTextBox.getText().toString();
+            EditText packageIDTextBox = (EditText) findViewById(R.id.edit_message);
+            String packageID = packageIDTextBox.getText().toString();
 
-        intent.putExtra(AWSActivity.INTENT_PARENT_ACTIVITY, MainPage.class);
-        intent.putExtra(AWSActivity.INTENT_PACKAGE_ID, packageID);
-        intent.putExtra(AWSActivity.INTENT_PACKAGE_UTC, Calendar.getInstance().getTime().getTime());
-        intent.putExtra(AWSActivity.INTENT_PACKAGE_ATTRIBUTES, "{\"NERD\" : \"Laura Miller\"}");
 
-        startActivity(intent);
+            AWSIntent.putExtra(AWSActivity.INTENT_PARENT_ACTIVITY, MainPage.class);
+            AWSIntent.putExtra(AWSActivity.INTENT_PACKAGE_ID, packageID);
+            AWSIntent.putExtra(AWSActivity.INTENT_PACKAGE_UTC, Calendar.getInstance().getTime().getTime());
+            AWSIntent.putExtra(AWSActivity.INTENT_PACKAGE_ATTRIBUTES, "{\"NERD\" : \"Laura Miller\"}");
+            AWSIntent.putExtra(AWSActivity.INTENT_AWS_CREDENTIALS, myCreds);
+
+            startActivity(AWSIntent);
+        }
+    }
+    public void inputAttributes(View view) {
+        Intent attributeIntent = new Intent(this, AttributePage.class);
+        startActivity(attributeIntent);
     }
 
 }
