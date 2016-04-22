@@ -10,9 +10,14 @@ import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.*;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.*;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
+import com.amazonaws.services.dynamodbv2.model.PutItemResult;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -26,7 +31,7 @@ import java.util.List;
  * @see CognitoCachingCredentialsProvider
  * @see DynamoDBMapper
  */
-public class AWSTask extends AsyncTask<String, Void, Void> {
+public class AWSTask extends AsyncTask<Map<String, String>, Void, List<PutItemResult>> {
 
     private Context mContext;
     private String identityPoolID;
@@ -35,19 +40,22 @@ public class AWSTask extends AsyncTask<String, Void, Void> {
     private SharedPreferences myPreference;
 
 
-    private List<Package> packages;
-
     public AWSTask (Context context) {
         mContext = context;
-        this.packages = new ArrayList<>();
     }
 
+    public static final String PACKAGE_ID_ATT_NAME = "PackageID";
+    public static final String UTC_ATT_NAME = "UTC";
+
+    /**
+     *
+     * @param params
+     * @return
+     */
     @Override
-    protected Void doInBackground(String... params) {
+    protected List<PutItemResult> doInBackground(Map<String, String>... params) {
         // send DDB mapping set
-
         myPreference= PreferenceManager.getDefaultSharedPreferences(mContext);
-
         CognitoCachingCredentialsProvider credentialsProvider =
             new CognitoCachingCredentialsProvider(
                 mContext, /* get the context for the application */
@@ -56,28 +64,43 @@ public class AWSTask extends AsyncTask<String, Void, Void> {
             );
 
         AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
-        DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
 
-        for (Package p : packages) mapper.save(p);
-        packages.clear();
+        Map<String, AttributeValue> dbPutItemRequest = new HashMap<String, AttributeValue>();
+        List<PutItemResult> dbPutItemResults = new ArrayList<PutItemResult>();
 
-        return null;
+        for (Map<String, String> inputSSMap : params) {
+
+            for (String key : inputSSMap.keySet()) {
+                dbPutItemRequest.put(key, new AttributeValue(inputSSMap.get(key)));
+            }
+
+            if (this.verify(dbPutItemRequest)) {
+                dbPutItemResults.add(ddbClient.putItem("Package_Table", dbPutItemRequest));
+            }
+
+            dbPutItemRequest.clear();
+        }
+
+        return dbPutItemResults;
+    }
+
+
+    /**
+     * Verifies that the request contains all of the required keys.
+     *
+     * @param dbPutItemRequest Put item request to verify.
+     * @return True if the request contains a Package ID Attribute, a UTC, and a Local Date Time.
+     */
+    private boolean verify(Map<String, AttributeValue> dbPutItemRequest) {
+        return (null != dbPutItemRequest)
+                && dbPutItemRequest.containsKey(AWSTask.PACKAGE_ID_ATT_NAME)
+                && dbPutItemRequest.containsKey(AWSTask.UTC_ATT_NAME);
     }
 
     @Override
     protected void onCancelled() {
         //  Auto-generated method stub
         super.onCancelled();
-    }
-
-
-    /**
-     * Adds a package to the list of packages to save to AWS DynamoDB.
-     *
-     * @param awsPackage Package object to save.
-     */
-    public void addPackage(Package awsPackage) {
-        this.packages.add(awsPackage);
     }
 
 };
