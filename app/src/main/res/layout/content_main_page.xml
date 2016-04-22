@@ -44,4 +44,10 @@
         android:text="@string/button_Attribute_text"
         android:onClick="inputAttributes"/>
 
+    <TextView
+        android:id="@+id/attribute_text"
+        android:text="@string/default_attribute_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

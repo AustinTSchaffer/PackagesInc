@@ -5,6 +5,7 @@
     <string name="tex_box_placeholder_package_id">Package ID</string>
     <string name="button_send_text">Send</string>
     <string name="button_Attribute_text">Input Attributes?</string>
+    <string name="default_attribute_text">Attributes Empty</string>
     <string name="title_activity_display_message">My Message</string>
     <string name="title_activity_scan_barcode">Scan Barcode</string>
     <string name="spinner">Template:</string>

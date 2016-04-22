@@ -8,7 +8,7 @@ import android.widget.CheckBox;
 public class ResourceItem {
 
     String resourceTitle, resourceValue;
-    CheckBox send;
+    boolean checked;
 
     public ResourceItem(){}
 
@@ -16,12 +16,17 @@ public class ResourceItem {
         resourceTitle = title;
     }
 
-    public CheckBox getSend() {
-        return send;
+    public ResourceItem(String title, String value) {
+        resourceTitle = title;
+        resourceValue = value;
     }
 
-    public void setSend(CheckBox send) {
-        this.send = send;
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean isChecked) {
+        this.checked = isChecked;
     }
 
     public String getResourceTitle() {
@@ -42,6 +47,6 @@ public class ResourceItem {
 
     @Override
     public String toString() {
-        return this.resourceTitle + " " + this.resourceValue;
+        return this.resourceTitle + ": " + this.resourceValue;
     }
 }

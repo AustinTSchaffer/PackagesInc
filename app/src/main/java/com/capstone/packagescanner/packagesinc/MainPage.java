@@ -18,6 +18,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -39,14 +41,16 @@ public class MainPage extends AppCompatActivity {
     public final static String EXTRA_MESSAGE = "com.capstone.packagescanner.MESSAGE";
     public final static String SCANNED_BARCODE = "com.capstone.packagescanner.BARCODE_SCANNED";
     public final static String SCAN_BARCODE = "com.capstone.packagescanner.SCAN_BARCODE";
-    private static final String ID_POOL = "IDENTITY_POOL";
-    private static final String REGION = "REGION";
+    public final static String ATTRIBUTE_STRING = "com.capstone.packagescanner.ATTRIBUTE_STRING";
+    public final static String ATTRIBUTE_DATA = "com.capstone.packagescanner.ATTRIBUTE_DATA";
+    public final static String ID_POOL = "IDENTITY_POOL";
+    public final static String REGION = "REGION";
     private static final String TAG = "MainPage";
+    private static final int RETREIVE_ATTRIBUTES = 1;
 
     private Intent intent;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
-    private ArrayList<String> myCreds;
-
+    private ArrayList<String> myCreds = new ArrayList<>(), attributeData = new ArrayList<>();
 
 
     private SharedPreferences myPreference;
@@ -129,14 +133,20 @@ public class MainPage extends AppCompatActivity {
             editText.setText(this.intent.getStringExtra(MainPage.SCANNED_BARCODE));
         }
 
+        if (this.intent.hasExtra(ATTRIBUTE_DATA)) {
+            TextView attributeText = (TextView) findViewById(R.id.attribute_text);
+            attributeData = this.intent.getStringArrayListExtra(ATTRIBUTE_DATA);
+            String attributeString = "";
+            for (String attribute: attributeData) {
+                attributeString += attribute + "\n";
+            }
+            attributeText.setText(attributeString);
+        }
+
     }
 
     private void setCredentials() {
-        myCreds = new ArrayList<>();
-        myCreds.add(myPreference.getString(ID_POOL, ""));
         String region = myPreference.getString(REGION, "");
-        myCreds.add(region);
-
         TextView regionText = (TextView) findViewById(R.id.region_text);
         regionText.setText(region);
     }
@@ -173,14 +183,31 @@ public class MainPage extends AppCompatActivity {
             AWSIntent.putExtra(AWSActivity.INTENT_PACKAGE_ID, packageID);
             AWSIntent.putExtra(AWSActivity.INTENT_PACKAGE_UTC, Calendar.getInstance().getTime().getTime());
             AWSIntent.putExtra(AWSActivity.INTENT_PACKAGE_ATTRIBUTES, "{\"NERD\" : \"Laura Miller\"}");
-            AWSIntent.putExtra(AWSActivity.INTENT_AWS_CREDENTIALS, myCreds);
 
             startActivity(AWSIntent);
         }
     }
     public void inputAttributes(View view) {
+
         Intent attributeIntent = new Intent(this, AttributePage.class);
-        startActivity(attributeIntent);
+        if (!attributeData.isEmpty()) {
+            attributeIntent.putExtra(ATTRIBUTE_DATA, attributeData);
+        }
+        startActivityForResult(attributeIntent, RETREIVE_ATTRIBUTES);
     }
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RETREIVE_ATTRIBUTES) {
+            if (resultCode == RESULT_OK) {
+                TextView attributeText = (TextView) findViewById(R.id.attribute_text);
+                attributeData = data.getStringArrayListExtra(ATTRIBUTE_DATA);
+                this.intent.putExtra(MainPage.ATTRIBUTE_DATA, attributeData);
+                String attributeString = "";
+                for (String attribute: attributeData) {
+                    attributeString += attribute + "\n";
+                }
+                attributeText.setText(attributeString);
+            }
+        }
+    }
 }

@@ -1,8 +1,10 @@
 package com.capstone.packagescanner.packagesinc;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Region;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.regions.Regions;
@@ -30,6 +32,9 @@ public class AWSTask extends AsyncTask<String, Void, Void> {
     private String identityPoolID;
     private Regions region;
 
+    private SharedPreferences myPreference;
+
+
     private List<Package> packages;
 
     public AWSTask (Context context) {
@@ -41,11 +46,13 @@ public class AWSTask extends AsyncTask<String, Void, Void> {
     protected Void doInBackground(String... params) {
         // send DDB mapping set
 
+        myPreference= PreferenceManager.getDefaultSharedPreferences(mContext);
+
         CognitoCachingCredentialsProvider credentialsProvider =
             new CognitoCachingCredentialsProvider(
                 mContext, /* get the context for the application */
-                identityPoolID, /* Identity Pool ID */
-                region  /* Region for your identity pool--US_EAST_1 or EU_WEST_1*/
+                myPreference.getString(MainPage.ID_POOL, ""), /* Identity Pool ID */
+                Regions.valueOf(myPreference.getString(MainPage.REGION, ""))  /* Region for your identity pool--US_EAST_1 or EU_WEST_1*/
             );
 
         AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
@@ -71,11 +78,6 @@ public class AWSTask extends AsyncTask<String, Void, Void> {
      */
     public void addPackage(Package awsPackage) {
         this.packages.add(awsPackage);
-    }
-
-    public void setCredentials(List<String> creds) {
-        this.identityPoolID = creds.get(0);
-        this.region = Regions.valueOf(creds.get(1));
     }
 
 };

@@ -85,15 +85,6 @@ public class AWSActivity extends AppCompatActivity {
     /**
      * String List of AWS Credentials.
      */
-    private List<String> awsCreds= new ArrayList<String>();
-
-    /**
-     * Name value to use when sending a List<String> of credentials to this Activity through its
-     * intent.
-     */
-
-    public final static String INTENT_AWS_CREDENTIALS
-            = "com.capstone.packagescanner.packagesinc.AWS_CREDENTIALS";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +112,6 @@ public class AWSActivity extends AppCompatActivity {
         creds.add("US_EAST_1");
         task.setCredentials(creds);
         */
-        task.setCredentials(awsCreds);
 
         task.execute();
 
@@ -159,11 +149,6 @@ public class AWSActivity extends AppCompatActivity {
         if (intent.hasExtra(AWSActivity.INTENT_PACKAGE_ATTRIBUTES)) {
             String jsonAttributes = intent.getStringExtra(AWSActivity.INTENT_PACKAGE_ATTRIBUTES);
             if (null != jsonAttributes) this.attributesJSONString = jsonAttributes;
-        }
-
-        if (intent.hasExtra(AWSActivity.INTENT_AWS_CREDENTIALS)) {
-            List<String> creds = intent.getStringArrayListExtra(AWSActivity.INTENT_AWS_CREDENTIALS);
-            if (null != creds) this.awsCreds = creds;
         }
     }
 

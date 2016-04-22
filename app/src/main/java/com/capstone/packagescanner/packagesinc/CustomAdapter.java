@@ -18,6 +18,7 @@ package com.capstone.packagescanner.packagesinc;
         import android.view.ViewGroup;
         import android.widget.ArrayAdapter;
         import android.widget.CheckBox;
+        import android.widget.CompoundButton;
         import android.widget.EditText;
         import android.widget.TextView;
         import android.widget.Toast;
@@ -38,7 +39,7 @@ class CustomAdapter extends ArrayAdapter<ResourceItem> {
      * to the bike when sorting so
      */
     private static class ViewHolder {
-        CheckBox toSend;
+        CheckBox toSave;
         EditText Title;
         EditText Value;
     }
@@ -61,25 +62,56 @@ class CustomAdapter extends ArrayAdapter<ResourceItem> {
 
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
 
         // fill this out, use both Viewholder and convertview
 
-        ViewHolder holder;
+        final ViewHolder holder;
 
         if( convertView == null) {
             convertView = inflater.inflate((R.layout.listview_row_layout), parent, false);
         }
         holder = new ViewHolder();
         //holder.imageView1 = (ImageView)convertView.findViewById(R.id.imageView1);
-        holder.toSend = (CheckBox)convertView.findViewById(R.id.Send);
+        holder.toSave = (CheckBox)convertView.findViewById(R.id.Send);
         holder.Title = (EditText)convertView.findViewById(R.id.Title);
         holder.Value = (EditText)convertView.findViewById(R.id.Value);
         //holder.Description = (TextView)convertView.findViewById(R.id.Description);
         //holder.pictureID = data.get(position).getPicture();
 
-        holder.toSend.setChecked(true);
+        holder.toSave.setChecked(true);
+        data.get(position).setChecked(true);
         holder.Title.setText(data.get(position).getResourceTitle());
+        holder.Value.setText(data.get(position).getResourceValue());
+
+        holder.Title.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (position < data.size()) {
+                        data.get(position).setResourceTitle(((EditText) v).getText().toString());
+                    }
+                }
+
+            }
+        });
+        holder.Value.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if(position < data.size()) {
+                        data.get(position).setResourceValue(((EditText) v).getText().toString());
+                    }
+                }
+
+            }
+        });
+        holder.toSave.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                data.get(position).setChecked(isChecked);
+            }
+        });
 
         //give it to listview for display
         return convertView;
@@ -90,8 +122,11 @@ class CustomAdapter extends ArrayAdapter<ResourceItem> {
         data = aData;
     }
 
+    public ArrayList<ResourceItem> getData() {
+        return new ArrayList<ResourceItem>(data);
+    }
     public boolean isChecked(int position) {
-        return data.get(position).getSend().isChecked();
+        return data.get(position).isChecked();
     }
 
     public String stringOf(int position) {
