@@ -39,7 +39,6 @@ public class AWSTask extends AsyncTask<Map<String, String>, Void, List<PutItemRe
 
     private SharedPreferences myPreference;
 
-
     public AWSTask (Context context) {
         mContext = context;
     }
@@ -55,7 +54,9 @@ public class AWSTask extends AsyncTask<Map<String, String>, Void, List<PutItemRe
     @Override
     protected List<PutItemResult> doInBackground(Map<String, String>... params) {
         // send DDB mapping set
+
         myPreference= PreferenceManager.getDefaultSharedPreferences(mContext);
+
         CognitoCachingCredentialsProvider credentialsProvider =
             new CognitoCachingCredentialsProvider(
                 mContext, /* get the context for the application */

@@ -15,12 +15,12 @@ import android.widget.TextView;
 import com.amazonaws.services.dynamodbv2.model.PutItemResult;
 
 import java.io.Serializable;
+
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -53,13 +53,13 @@ public class AWSActivity extends AppCompatActivity {
 
     private ArrayList<HashMap<String, String>> putItemRequests;
 
-
-    public static final String INTENT_SERIALIZED_REQUEST_MAP
-            = "com.capstone.packagescanner.packagesinc.requestmap";
-
     /**
      * String List of AWS Credentials.
      */
+    public static final String INTENT_SERIALIZED_REQUEST_MAP
+            = "com.capstone.packagescanner.packagesinc.requestmap";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
