@@ -72,7 +72,17 @@ public class AWSTask extends AsyncTask<Map<String, String>, Void, List<PutItemRe
         for (Map<String, String> inputSSMap : params) {
 
             for (String key : inputSSMap.keySet()) {
-                dbPutItemRequest.put(key, new AttributeValue(inputSSMap.get(key)));
+
+                AttributeValue av = new AttributeValue();
+
+                if (key.equals(AWSTask.UTC_ATT_NAME)) {
+                    av.setN(inputSSMap.get(key));
+                }
+                else {
+                    av.setS(inputSSMap.get(key));
+                }
+
+                dbPutItemRequest.put(key, av);
             }
 
             if (this.verify(dbPutItemRequest)) {
