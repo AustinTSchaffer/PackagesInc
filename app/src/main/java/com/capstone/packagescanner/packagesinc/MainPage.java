@@ -23,6 +23,7 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,7 +51,8 @@ public class MainPage extends AppCompatActivity {
 
     private Intent intent;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
-    private ArrayList<String> myCreds = new ArrayList<>(), attributeData = new ArrayList<>();
+    HashMap<String, String> attributeMap = new HashMap<String, String>();
+    ArrayList<String> attributeData = new ArrayList<>();
 
 
     private SharedPreferences myPreference;
@@ -178,12 +180,22 @@ public class MainPage extends AppCompatActivity {
             EditText packageIDTextBox = (EditText) findViewById(R.id.edit_message);
             String packageID = packageIDTextBox.getText().toString();
 
+            attributeMap.put(AWSTask.UTC_ATT_NAME, Long.toString(Calendar.getInstance().getTime().getTime()));
+            attributeMap.put(AWSTask.PACKAGE_ID_ATT_NAME, packageID);
+
+            //map attributeData to attributeMap
+            for (String attribute: attributeData) {
+                String[] attributeArray = attribute.split(": ");
+                attributeMap.put(attributeArray[0], attributeArray[1]);
+            }
+
 
             AWSIntent.putExtra(AWSActivity.INTENT_PARENT_ACTIVITY, MainPage.class);
-            AWSIntent.putExtra(AWSActivity.INTENT_PACKAGE_ID, packageID);
+            AWSIntent.putExtra(AWSActivity.INTENT_SERIALIZED_REQUEST_MAP, attributeMap);
+            /*AWSIntent.putExtra(AWSActivity.INTENT_PACKAGE_ID, packageID);
             AWSIntent.putExtra(AWSActivity.INTENT_PACKAGE_UTC, Calendar.getInstance().getTime().getTime());
             AWSIntent.putExtra(AWSActivity.INTENT_PACKAGE_ATTRIBUTES, "{\"NERD\" : \"Laura Miller\"}");
-
+            */
             startActivity(AWSIntent);
         }
     }
