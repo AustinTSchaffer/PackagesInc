@@ -45,6 +45,7 @@ public class AWSTask extends AsyncTask<Map<String, String>, Void, List<PutItemRe
 
     public static final String PACKAGE_ID_ATT_NAME = "PackageID";
     public static final String UTC_ATT_NAME = "UTC";
+    public static final String DATE_TIME = "DATE_TIME";
 
     /**
      *

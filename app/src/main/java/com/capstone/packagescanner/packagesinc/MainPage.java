@@ -181,6 +181,7 @@ public class MainPage extends AppCompatActivity {
             String packageID = packageIDTextBox.getText().toString();
 
             attributeMap.put(AWSTask.UTC_ATT_NAME, Long.toString(Calendar.getInstance().getTime().getTime()));
+            attributeMap.put(AWSTask.DATE_TIME, Calendar.getInstance().getTime().toString());
             attributeMap.put(AWSTask.PACKAGE_ID_ATT_NAME, packageID);
 
             //map attributeData to attributeMap
