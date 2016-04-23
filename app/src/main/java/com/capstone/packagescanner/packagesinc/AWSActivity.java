@@ -67,15 +67,15 @@ public class AWSActivity extends AppCompatActivity {
 
         CoordinatorLayout layout = (CoordinatorLayout) findViewById(R.id.content);
 
-        TextView textView = new TextView(this);
-        textView.setTextSize(20);
-        layout.addView(textView);
 
         this.processIntent(getIntent());
 
         AWSTask task = new AWSTask(getApplicationContext());
 
         for (Map<String, String> m : putItemRequests) {
+            TextView textView = (TextView) findViewById(R.id.sent_text);
+            String text = "Sent Package ID: " + m.get(AWSTask.PACKAGE_ID_ATT_NAME);
+            textView.setText(text);
             task.execute(m);
         }
 
